@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="Windows-31J"?>
+
+<project name="authenticator" default="build-jar" basedir=".">
+
+	<path id="project-classpath">
+		<pathelement path="build" />
+		<pathelement location="catalina.jar" />
+	</path>
+
+	<target name="build-jar" depends="cleanup">
+		<mkdir dir="build" />
+		<javac srcdir="src" destdir="build" debug="true" optimize="true" deprecation="true" includeantruntime="false" encoding="MS932">
+			<classpath refid="project-classpath" />
+			<include name="**/*.java" />
+		</javac>
+		<copy file="src/authenticator-version.txt" todir="build" />
+		<copy todir="build">
+			<fileset dir="src" includes="**/*.java" />
+		</copy>
+		<jar basedir="build" jarfile="authenticator.jar" />
+
+		<delete dir="build" />
+		<mkdir dir="build" />
+		<javac srcdir="src" destdir="build" debug="true" optimize="true" deprecation="true" includeantruntime="false" encoding="MS932">
+			<classpath refid="project-classpath" />
+			<include name="**/Digester.java" />
+		</javac>
+		<copy file="src/authenticator-version.txt" todir="build" />
+		<copy todir="build">
+			<fileset dir="src" includes="Digester.java" />
+		</copy>
+		<jar basedir="build" jarfile="authenticator-rt.jar" />
+	</target>
+
+	<target name="cleanup">
+		<delete dir="build" />
+		<delete file="authenticator.jar" />
+		<delete file="authenticator-rt.jar" />
+	</target>
+</project>
