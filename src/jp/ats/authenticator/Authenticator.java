@@ -10,17 +10,17 @@ public abstract class Authenticator {
 
 	private static final ThreadLocal<String> currentMessage = new ThreadLocal<String>();
 
-	//“–ŠYƒXƒŒƒbƒh‚ÌƒƒOƒCƒ“‚ªƒƒbƒNƒAƒEƒg‚³‚ê‚½‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é
-	//ƒ`ƒFƒbƒN‚Æ“¯‚ÉƒNƒŠƒA‚³‚ê‚é‚Ì‚ÅAˆêƒƒOƒCƒ“‚É‚Â‚«ˆê“x‚µ‚©ƒ`ƒFƒbƒN‚Å‚«‚È‚¢
-	//ÀsŠÂ‹«‚É‚±‚ÌƒNƒ‰ƒX‚ğ’u‚¢‚Ä‚Í‚¢‚¯‚È‚¢
+	//å½“è©²ã‚¹ãƒ¬ãƒƒãƒ‰ã®ãƒ­ã‚°ã‚¤ãƒ³ãŒãƒ­ãƒƒã‚¯ã‚¢ã‚¦ãƒˆã•ã‚ŒãŸã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹
+	//ãƒã‚§ãƒƒã‚¯ã¨åŒæ™‚ã«ã‚¯ãƒªã‚¢ã•ã‚Œã‚‹ã®ã§ã€ä¸€ãƒ­ã‚°ã‚¤ãƒ³ã«ã¤ãä¸€åº¦ã—ã‹ãƒã‚§ãƒƒã‚¯ã§ããªã„
+	//å®Ÿè¡Œç’°å¢ƒã«ã“ã®ã‚¯ãƒ©ã‚¹ã‚’ç½®ã„ã¦ã¯ã„ã‘ãªã„
 	public static Date getLockoutLimitOnCurrentThread() {
 		Date limit = currentLockout.get();
 		currentLockout.set(null);
 		return limit;
 	}
 
-	//ƒ`ƒFƒbƒN‚Æ“¯‚ÉƒNƒŠƒA‚³‚ê‚é‚Ì‚ÅAˆêƒƒOƒCƒ“‚É‚Â‚«ˆê“x‚µ‚©ƒ`ƒFƒbƒN‚Å‚«‚È‚¢
-	//ÀsŠÂ‹«‚É‚±‚ÌƒNƒ‰ƒX‚ğ’u‚¢‚Ä‚Í‚¢‚¯‚È‚¢
+	//ãƒã‚§ãƒƒã‚¯ã¨åŒæ™‚ã«ã‚¯ãƒªã‚¢ã•ã‚Œã‚‹ã®ã§ã€ä¸€ãƒ­ã‚°ã‚¤ãƒ³ã«ã¤ãä¸€åº¦ã—ã‹ãƒã‚§ãƒƒã‚¯ã§ããªã„
+	//å®Ÿè¡Œç’°å¢ƒã«ã“ã®ã‚¯ãƒ©ã‚¹ã‚’ç½®ã„ã¦ã¯ã„ã‘ãªã„
 	public static String getMessageOnCurrentThread() {
 		String message = currentMessage.get();
 		currentMessage.set(null);
@@ -35,15 +35,15 @@ public abstract class Authenticator {
 		currentLockout.set(limit);
 	}
 
-	protected boolean authenticate(Result result, String password) {
+	protected boolean authenticate(Result result,String username, String password) {
 		if (result.expirationDate != null
 			&& result.expirationDate.getTime() < System.currentTimeMillis()) {
-			setMessageOnCurrentThread("ƒpƒXƒ[ƒh‚Ì—LŒøŠúŠÔ‚ª‰ß‚¬‚Ä‚¢‚Ü‚·");
+			setMessageOnCurrentThread("ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã®æœ‰åŠ¹æœŸé–“ãŒéãã¦ã„ã¾ã™");
 			return false;
 		}
 
 		if (!Digester.digest(result.salt, password).equals(result.password)) {
-			setMessageOnCurrentThread("ƒƒOƒCƒ“‚Å‚«‚Ü‚¹‚ñ");
+			setMessageOnCurrentThread("ãƒ­ã‚°ã‚¤ãƒ³ã§ãã¾ã›ã‚“");
 			return false;
 		}
 

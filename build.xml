@@ -9,7 +9,7 @@
 
 	<target name="build-jar" depends="cleanup">
 		<mkdir dir="build" />
-		<javac srcdir="src" destdir="build" debug="true" optimize="true" deprecation="true" includeantruntime="false" encoding="MS932">
+		<javac srcdir="src" destdir="build" debug="true" optimize="true" deprecation="true" includeantruntime="false" encoding="UTF-8">
 			<classpath refid="project-classpath" />
 			<include name="**/*.java" />
 		</javac>
@@ -21,7 +21,7 @@
 
 		<delete dir="build" />
 		<mkdir dir="build" />
-		<javac srcdir="src" destdir="build" debug="true" optimize="true" deprecation="true" includeantruntime="false" encoding="MS932">
+		<javac srcdir="src" destdir="build" debug="true" optimize="true" deprecation="true" includeantruntime="false" encoding="UTF-8">
 			<classpath refid="project-classpath" />
 			<include name="**/Digester.java" />
 		</javac>

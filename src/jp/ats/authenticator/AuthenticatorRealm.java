@@ -46,9 +46,9 @@ public class AuthenticatorRealm extends RealmBase {
 		synchronized (lockoutUsers) {
 			LockInfo lock = lockoutUsers.get(username);
 
-			//ˆê“x‚Å‚àƒƒOƒCƒ“‚ğ‚µ‚Ä‚¢‚½ê‡
+			//ä¸€åº¦ã§ã‚‚ãƒ­ã‚°ã‚¤ãƒ³ã‚’è©¦ã—ã¦ã„ãŸå ´åˆ
 			if (lock != null) {
-				//ƒŠƒgƒ‰ƒC‰ñ”‚ª§ŒÀ’lˆÈã‚Ìê‡
+				//ãƒªãƒˆãƒ©ã‚¤å›æ•°ãŒåˆ¶é™å€¤ä»¥ä¸Šã®å ´åˆ
 				if (lock.retry >= authenticator.getPermittedRetryCount()) {
 					if (lock.lockoutLimit == null) {
 						lock.lockoutLimit = new Date(System.currentTimeMillis()
@@ -56,22 +56,22 @@ public class AuthenticatorRealm extends RealmBase {
 							* 1000);
 					}
 
-					//ƒƒbƒNƒAƒEƒgŠÔ‚É‚Ü‚¾’B‚µ‚Ä‚¢‚È‚¢ê‡A”FØ¸”s
+					//ãƒ­ãƒƒã‚¯ã‚¢ã‚¦ãƒˆæ™‚é–“ã«ã¾ã é”ã—ã¦ã„ãªã„å ´åˆã€èªè¨¼å¤±æ•—
 					if (lock.lockoutLimit.getTime() > System.currentTimeMillis()) {
-						//ƒƒOƒCƒ“¸”s‰æ–Ê‚ÉƒƒbƒNƒAƒEƒg‚³‚ê‚Ä‚¢‚é|‚ÌƒƒbƒZ[ƒW‚ğo‚¹‚é‚æ‚¤‚É
-						//‚±‚ÌƒXƒŒƒbƒh‚ÉƒƒbƒNƒAƒEƒgŠÔ‚ğ•R•t‚¯‚Ä‚¨‚­
+						//ãƒ­ã‚°ã‚¤ãƒ³å¤±æ•—ç”»é¢ã«ãƒ­ãƒƒã‚¯ã‚¢ã‚¦ãƒˆã•ã‚Œã¦ã„ã‚‹æ—¨ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºã›ã‚‹ã‚ˆã†ã«
+						//ã“ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã«ãƒ­ãƒƒã‚¯ã‚¢ã‚¦ãƒˆæ™‚é–“ã‚’ç´ä»˜ã‘ã¦ãŠã
 						Authenticator.setLockoutLimitOnCurrentThread(lock.lockoutLimit);
-						Authenticator.setMessageOnCurrentThread("”FØ‚É•¡”‰ñ¸”s‚µ‚½‚Ì‚ÅŒ»İƒAƒJƒEƒ“ƒg‚ÍƒƒbƒN‚³‚ê‚Ä‚¢‚Ü‚·");
+						Authenticator.setMessageOnCurrentThread("èªè¨¼ã«è¤‡æ•°å›å¤±æ•—ã—ãŸã®ã§ç¾åœ¨ã‚¢ã‚«ã‚¦ãƒ³ãƒˆã¯ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã„ã¾ã™");
 						return null;
 					}
 
-					//ƒŠƒZƒbƒg
+					//ãƒªã‚»ãƒƒãƒˆ
 					lock.retry = 1;
 					lock.lockoutLimit = null;
 				} else {
 					lock.retry++;
 				}
-			} else { //‰‰ñƒƒOƒCƒ“
+			} else { //åˆå›ãƒ­ã‚°ã‚¤ãƒ³æ™‚
 				lock = new LockInfo();
 				lock.retry = 1;
 				lockoutUsers.put(username, lock);
@@ -101,11 +101,11 @@ public class AuthenticatorRealm extends RealmBase {
 		}
 
 		if (result == null) {
-			Authenticator.setMessageOnCurrentThread("ƒƒOƒCƒ“‚Å‚«‚Ü‚¹‚ñ");
+			Authenticator.setMessageOnCurrentThread("ãƒ­ã‚°ã‚¤ãƒ³ã§ãã¾ã›ã‚“");
 			return null;
 		}
 
-		if (!authenticator.authenticate(result, password)) return null;
+		if (!authenticator.authenticate(result, username, password)) return null;
 
 		synchronized (lockoutUsers) {
 			lockoutUsers.remove(username);
@@ -138,7 +138,7 @@ public class AuthenticatorRealm extends RealmBase {
 						enumeration.nextElement(),
 						path);
 
-					//ˆê”ÔÅ‰‚ÉŒ©‚Â‚©‚Á‚½‚à‚Ì‚ğg—p‚·‚é
+					//ä¸€ç•ªæœ€åˆã«è¦‹ã¤ã‹ã£ãŸã‚‚ã®ã‚’ä½¿ç”¨ã™ã‚‹
 					if (authenticator != null) break;
 				}
 			} catch (Exception e) {
@@ -170,7 +170,7 @@ public class AuthenticatorRealm extends RealmBase {
 			Authenticator authenticator = (Authenticator) Class.forName(
 				line.trim()).newInstance();
 
-			//ˆê”ÔÅ‰‚ÉŒ©‚Â‚©‚Á‚½‚à‚Ì‚ğ•Ô‚·
+			//ä¸€ç•ªæœ€åˆã«è¦‹ã¤ã‹ã£ãŸã‚‚ã®ã‚’è¿”ã™
 			if (authenticator.getApplicationPath().equals(path)) return authenticator;
 		}
 
