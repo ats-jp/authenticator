@@ -4,6 +4,7 @@
 
 	<path id="project-classpath">
 		<pathelement path="build" />
+		<pathelement location="tomcat-api.jar" />
 		<pathelement location="catalina.jar" />
 	</path>
 

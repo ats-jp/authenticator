@@ -16,12 +16,12 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import jp.ats.authenticator.Authenticator.Result;
-
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.realm.GenericPrincipal;
 import org.apache.catalina.realm.RealmBase;
+
+import jp.ats.authenticator.Authenticator.Result;
 
 public class AuthenticatorRealm extends RealmBase {
 
@@ -30,11 +30,6 @@ public class AuthenticatorRealm extends RealmBase {
 	private DataSource dataSource;
 
 	private static final Map<String, LockInfo> lockoutUsers = new HashMap<String, LockInfo>();
-
-	@Override
-	protected String getName() {
-		return getClass().getName();
-	}
 
 	@Override
 	public Principal authenticate(String username, String password) {
@@ -113,7 +108,6 @@ public class AuthenticatorRealm extends RealmBase {
 
 		return new GenericPrincipal(
 			username,
-			result.password,
 			Arrays.asList(result.roles));
 	}
 
