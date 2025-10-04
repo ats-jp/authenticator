@@ -46,17 +46,20 @@ public class AuthenticatorRealm extends RealmBase {
 				//リトライ回数が制限値以上の場合
 				if (lock.retry >= authenticator.getPermittedRetryCount()) {
 					if (lock.lockoutLimit == null) {
-						lock.lockoutLimit = new Date(System.currentTimeMillis()
-							+ authenticator.getLockoutSeconds()
-							* 1000);
+						lock.lockoutLimit = new Date(
+							System.currentTimeMillis()
+								+ authenticator.getLockoutSeconds() * 1000);
 					}
 
 					//ロックアウト時間にまだ達していない場合、認証失敗
-					if (lock.lockoutLimit.getTime() > System.currentTimeMillis()) {
+					if (lock.lockoutLimit.getTime() > System
+						.currentTimeMillis()) {
 						//ログイン失敗画面にロックアウトされている旨のメッセージを出せるように
 						//このスレッドにロックアウト時間を紐付けておく
-						Authenticator.setLockoutLimitOnCurrentThread(lock.lockoutLimit);
-						Authenticator.setMessageOnCurrentThread("認証に複数回失敗したので現在アカウントはロックされています");
+						Authenticator
+							.setLockoutLimitOnCurrentThread(lock.lockoutLimit);
+						Authenticator.setMessageOnCurrentThread(
+							"認証に複数回失敗したので現在アカウントはロックされています");
 						return null;
 					}
 
@@ -76,7 +79,8 @@ public class AuthenticatorRealm extends RealmBase {
 		synchronized (this) {
 			if (dataSource == null) {
 				try {
-					dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/datasource");
+					dataSource = (DataSource) new InitialContext()
+						.lookup("java:comp/env/jdbc/datasource");
 				} catch (NamingException e) {
 					throw new IllegalStateException(e);
 				}
@@ -100,15 +104,14 @@ public class AuthenticatorRealm extends RealmBase {
 			return null;
 		}
 
-		if (!authenticator.authenticate(result, username, password)) return null;
+		if (!authenticator.authenticate(result, username, password))
+			return null;
 
 		synchronized (lockoutUsers) {
 			lockoutUsers.remove(username);
 		}
 
-		return new GenericPrincipal(
-			username,
-			Arrays.asList(result.roles));
+		return new GenericPrincipal(username, Arrays.asList(result.roles));
 	}
 
 	@Override
@@ -157,15 +160,18 @@ public class AuthenticatorRealm extends RealmBase {
 
 	private static Authenticator readAuthenticator(URL url, String path)
 		throws Exception {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-			url.openStream()));
+		BufferedReader reader = new BufferedReader(
+			new InputStreamReader(url.openStream()));
 		String line;
 		while ((line = reader.readLine()) != null) {
-			Authenticator authenticator = (Authenticator) Class.forName(
-				line.trim()).newInstance();
+			Authenticator authenticator = (Authenticator) Class
+				.forName(line.trim())
+				.getConstructor()
+				.newInstance();
 
 			//一番最初に見つかったものを返す
-			if (authenticator.getApplicationPath().equals(path)) return authenticator;
+			if (authenticator.getApplicationPath().equals(path))
+				return authenticator;
 		}
 
 		return null;
