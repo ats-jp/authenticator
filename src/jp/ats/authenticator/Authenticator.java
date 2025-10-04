@@ -35,7 +35,7 @@ public abstract class Authenticator {
 		currentLockout.set(limit);
 	}
 
-	protected boolean authenticate(Result result,String username, String password) {
+	protected boolean authenticate(Result result, String username, String password) {
 		if (result.expirationDate != null
 			&& result.expirationDate.getTime() < System.currentTimeMillis()) {
 			setMessageOnCurrentThread("パスワードの有効期間が過ぎています");
